@@ -1,17 +1,17 @@
-﻿# # CRC32テーブルを作成
+﻿# CRC32演算スクリプト
+
+# CRC32テーブルを作成
 # function make_crc32_table(){
+# 	$mno = 0x12477CDF -bxor [uint]::MaxValue 
 #     $ret = @()
 #     for($i = 0 ; $i -lt 256 ; $i++){
 #         $c = $i
 #         for( $j = 0 ; $j -lt 8 ; $j++){
-#             $cc = $c -band 1
-#             $c = ($c - $cc) / 2
-#             if($c -lt 0){
-#                 $c -= 0x80000000
-#             }
-#             if($cc){
-#                 $c = $c -bxor 0xEDB88320
-#             }
+# 			if($c -band 1){
+# 				$c = ($c -shr 1) -bxor $mno
+# 			}else{
+# 				$c = $c -shr 1
+# 			}
 #         }
 #         $ret += $c
 #     }
@@ -38,6 +38,8 @@
 #     $str += ")"
 #     $str | Out-File "crc32_table_ps.txt"
 # }
+# $tmp = make_crc32_table
+# save_crc32_table $tmp
 
 $crc32_table = @(
 	0x00000000,0x77073096,0xEE0E612C,0x990951BA,0x076DC419,0x706AF48F,0xE963A535,0x9E6495A3,
@@ -83,4 +85,4 @@ function crc32_from_file([string]$path){
     return "{0:X8}" -f (-bnot $num)
 }
 
-crc32_from_file "crc32_table_ps.txt"
+#crc32_from_file "crc32_table_ps.txt"
