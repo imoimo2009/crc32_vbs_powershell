@@ -2,7 +2,7 @@
 
 # CRC32テーブルを作成
 # function make_crc32_table(){
-# 	$mno = 0x12477CDF -bxor [uint]::MaxValue 
+# 	$mno = 0x12477CDF -bxor [UInt32]::MaxValue 
 #     $ret = @()
 #     for($i = 0 ; $i -lt 256 ; $i++){
 #         $c = $i
@@ -78,11 +78,11 @@ $crc32_table = @(
 
 function crc32_from_file([string]$path){
     $byte = [System.IO.File]::ReadAllBytes($path)
-    $num = [uint]::MaxValue
+    $num = [UInt32]::MaxValue
     for($i = 0 ; $i -lt $byte.Length ; $i++){
         $num = ($num -shr 8) -bxor $crc32_table[($num -bxor $byte[$i]) -band 0xFF]
     }
     return "{0:X8}" -f (-bnot $num)
 }
 
-#crc32_from_file "crc32_table_ps.txt"
+crc32_from_file "crc32.vbs"
